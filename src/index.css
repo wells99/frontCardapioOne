@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* Esconde a barra de rolagem para navegadores baseados em WebKit */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Esconde a barra de rolagem para Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none; /* IE e Edge */
+    scrollbar-width: none;  /* Firefox */
+}
