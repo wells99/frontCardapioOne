@@ -3,8 +3,8 @@ import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const AXIOS = axios.create({
-  baseURL: "http://localhost:4000"
-  // baseURL: "https://endcardapio.onrender.com/"
+  // baseURL: "http://localhost:4000"
+  baseURL: "https://endcardapio.onrender.com/"
 });
 
 // Adicionando o interceptor de requisição para incluir o token
