@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useEffect, useMemo } from 'react';
 
 const API_BASE_URL = 'https://endcardapio.onrender.com';
 
@@ -9,17 +10,37 @@ const fetchProducts = async () => {
 };
 
 const Cardapio = () => {
+  const produtosSalvos = sessionStorage.getItem('produtos');
+  const produtosParse = produtosSalvos ? JSON.parse(produtosSalvos) : null;
+
   const {
-    data: products,
+    data: fetchedProducts,
     isLoading,
     isError,
     error,
-    isFetching
+    isFetching,
   } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
+    enabled: !produtosParse, // só busca da API se não tiver no sessionStorage
   });
 
+  // Decide qual fonte usar
+  const products = produtosParse || fetchedProducts;
+
+  // Salva no sessionStorage assim que os dados são carregados da API
+  useEffect(() => {
+    if (fetchedProducts && !produtosParse) {
+      sessionStorage.setItem('produtos', JSON.stringify(fetchedProducts));
+    }
+  }, [fetchedProducts, produtosParse]);
+
+  const categories = useMemo(() => {
+    if (!products) return [];
+    return [...new Set(products.map(product => product.category.name))];
+  }, [products]);
+
+  // Loading
   if (isLoading && !products) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -28,6 +49,7 @@ const Cardapio = () => {
     );
   }
 
+  // Erro
   if (isError) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -42,8 +64,6 @@ const Cardapio = () => {
     return null;
   }
 
-  const categories = [...new Set(products.map(product => product.category.name))];
-
   return (
     <div className="bg-gray-900 min-h-screen p-6">
       {isFetching && (
@@ -53,9 +73,7 @@ const Cardapio = () => {
       )}
 
       <div className="w-full text-center sm:text-center pl-5 sm:pl-0">
-        <h1 className="text-4xl font-extrabold text-white">
-          Cardápio
-        </h1>
+        <h1 className="text-4xl font-extrabold text-white">Cardápio</h1>
       </div>
 
       {categories.map(category => (
@@ -82,7 +100,7 @@ const Cardapio = () => {
                     )}
                     <div className="p-5 flex flex-col justify-around gap-8">
                       <div className='h-20'>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2 ">{product.name}</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
                         <p className="text-sm text-gray-600 mb-4 line-clamp-3">{product.description}</p>
                       </div>
                       <div className="flex justify-between items-center h-10">
@@ -100,8 +118,6 @@ const Cardapio = () => {
           </div>
         </div>
       ))}
-      <div>
-      </div>
     </div>
   );
 };

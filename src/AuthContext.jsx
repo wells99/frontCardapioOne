@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.setItem('token', token);
       return { success: true };
     } catch (error) {
-      // Ajuste para capturar a mensagem de erro de forma mais segura e flexível
+      
       const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro desconhecido. Tente novamente.';
       console.error('Login failed:', errorMessage);
       return { success: false, error: errorMessage };

@@ -8,13 +8,14 @@ import Produtos from "../pages/Produtos"
 import Clientes from "../pages/Clientes"
 import Empresa from "../pages/Empresa"
 import Pedidos from "../pages/Pedidos"
+import CardapioLoader from "../middlewares/CardapioLoader"
 
 const Paths = () => {
     return (
         <BrowserRouter>
             <Routes>
               
-                <Route path="/" element={<Cardapio />} />
+                <Route path="/" element={<CardapioLoader><Cardapio /></CardapioLoader>} />
                 
            
                 <Route path="/login" element={<Login />} />
