@@ -9,6 +9,8 @@ import Clientes from "../pages/Clientes"
 import Empresa from "../pages/Empresa"
 import Pedidos from "../pages/Pedidos"
 import CardapioLoader from "../middlewares/CardapioLoader"
+import ItemPedidos from "../pages/OrderItems"
+import Pagamentos from "../pages/Pagamentos"
 
 const Paths = () => {
     return (
@@ -29,6 +31,8 @@ const Paths = () => {
                     <Route path="clientes" element={<Clientes />} />
                     <Route path="empresa" element={<Empresa />} />
                     <Route path="pedidos" element={<Pedidos />} />
+                    <Route path="ItemPedidos" element={<ItemPedidos />} />
+                    <Route path="pagamentos" element={<Pagamentos />} />
                 </Route>
             </Routes>
         </BrowserRouter>

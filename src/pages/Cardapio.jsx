@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useMemo } from 'react';
+import logo from "../assets/zelogo.png";
+import { RestOutlined, SearchOutlined } from "@ant-design/icons"
+import DropdownList from '../components/DropdownList';
 
 const API_BASE_URL = 'https://endcardapio.onrender.com';
 
@@ -22,32 +24,15 @@ const Cardapio = () => {
   } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
-    enabled: !produtosParse, // só busca da API se não tiver no sessionStorage
   });
 
-  // Decide qual fonte usar
-  const products = produtosParse || fetchedProducts;
-
-  // Salva no sessionStorage assim que os dados são carregados da API
-  useEffect(() => {
-    if (fetchedProducts && !produtosParse) {
-      sessionStorage.setItem('produtos', JSON.stringify(fetchedProducts));
-    }
-  }, [fetchedProducts, produtosParse]);
-
-  const categories = useMemo(() => {
-    if (!products) return [];
-    return [...new Set(products.map(product => product.category.name))];
-  }, [products]);
-
-  // Loading
-  if (isLoading && !products) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-900">
-        <div className="text-xl font-semibold text-white">Carregando cardápio...</div>
-      </div>
-    );
-  }
+  // if (!products) {
+  //   return (
+  //     <div className="flex justify-center items-center h-screen bg-gray-900">
+  //       <div className="text-xl font-semibold text-white">Carregando cardápio...</div>
+  //     </div>
+  //   );
+  // }
 
   // Erro
   if (isError) {
@@ -64,60 +49,95 @@ const Cardapio = () => {
     return null;
   }
 
+  const categories = [...new Set(products.map(product => product.category.name))];
+
+
+  const handleCategoriaClick = (e) => {
+    console.log("Categoria escolhida:", e.key);
+  };
+
+  const categoriasss = categories.map(categoriaRenderizada => ({label:categoriaRenderizada, key:categoriaRenderizada}));
+
   return (
-    <div className="bg-gray-900 min-h-screen p-6">
+    <div className="bg-black min-h-screen flex flex-col gap-4">
       {isFetching && (
-        <div className="fixed top-4 right-4 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm">
+        <div className="fixed top-4 right-4  text-white px-4 py-2 rounded-lg text-sm">
           Atualizando...
         </div>
       )}
 
-      <div className="w-full text-center sm:text-center pl-5 sm:pl-0">
-        <h1 className="text-4xl font-extrabold text-white">Cardápio</h1>
+      <div className="w-full bg-black flex items-center justify-center text-center sm:text-center  sm:pl-0">
+        {/* <h1 className="text-4xl font-extrabold text-white">
+          Cardápio
+        </h1> */}
+        <img src={logo} alt="logo" className='w-50' />
+
+      </div>
+      <div className='bg-white h-40 w-full rounded-xl mt-[-20px] flex flex-col items-center justify-start 
+      md:items-start md:justify-center md:pl-20 lg:h-60'>
+        <div id='circlePhoto' className='bg-blue-500 rounded-full w-20 h-20 mt-[-40px] hidden lg:block'></div>
+        <h1 className='font-bold text-xl'>Zé mexicano</h1>
+        <div className='flex flex-col items-center justify-center text-center md:items-start'>
+          <h3>Fortaleza - CE</h3>
+          <h2 className='font-bold text-green-700'>Aberto até às 00h00</h2>
+        </div>
       </div>
 
-      {categories.map(category => (
-        <div key={category} className="mb-10 ">
-          <h2 className="text-3xl text-center font-bold text-white mb-6 mt-10 uppercase tracking-wide border-b-2 border-green-500 pb-2">
-            {category}
-          </h2>
+      <div className='flex items-center justify-between gap-4 px-4'>
+        <DropdownList lista={categoriasss} onClick={handleCategoriaClick} />
 
-          <div className='w-full overflow-x-scroll no-scrollbar'>
-            <div className="flex overflow-x-hidden py-2 px-4 w-fit lg:grid  lg:grid-cols-4 xl:grid-cols-4 gap-8 ">
+        <div className='w-10 h-10 bg-white rounded-xl flex items-center justify-center text-center '>
+          <SearchOutlined className='py-2' />
+        </div>
+      </div>
+
+      <div className='px-2 min-h-screen bg-neutral-300 '>
+        {categories.map(category => (
+          <div key={category} className="mb-10">
+            <h2 className="text-3xl text-left font-bold text-black mb-6 mt-10 uppercase tracking-wide border-b-2 border-green-500 pb-2">
+              {category}
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {products
                 .filter(product => product.category.name === category)
                 .map(product => (
                   <div
                     key={product.id}
-                    className="bg-white cursor-pointer max-h-[560px] min-w-[280px] max-w-[480px] rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-102"
+                    className="bg-white rounded-lg flex  flex-row items-center p-3 gap-3 overflow-hidden border shadow-2xl border-neutral-100"
                   >
-                    {product.imageUrl && (
-                      <img
-                        alt={product.name}
-                        src={product.imageUrl}
-                        className="w-full h-48 object-cover border-b-neutral-200 border-b-2 "
-                      />
-                    )}
-                    <div className="p-5 flex flex-col justify-around gap-8">
-                      <div className='h-20'>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
-                        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{product.description}</p>
-                      </div>
-                      <div className="flex justify-between items-center h-10">
-                        <span className="text-3xl font-bold text-green-600">
-                          R$ {product.price.toFixed(2)}
-                        </span>
-                        <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                          {product.category.name}
-                        </span>
-                      </div>
+                    {/* Texto — ocupa o espaço restante */}
+                    <div className="flex-1 pr-3">
+                      <h2 className="font-bold">{product.name}</h2>
+                      <h3 className="text-neutral-600 line-clamp-3">{product.description}</h3>
+                      <h4 className="font-semibold text-neutral-600">
+                        R$ {product.price.toFixed(2)}
+                      </h4>
                     </div>
+
+                    {/* Imagem — fica à direita em md+ (porque o card vira row) */}
+                    <div className="w-36 h-28 flex-shrink-0">
+                    {product.imageUrl.includes('http') ? (
+                        <img
+                          alt={product.name}
+                          src={product.imageUrl}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                    ) :
+                    (
+                        <RestOutlined
+                          className="rounded-lg bg-green-700 p-10 ml-4 sm:ml-8"
+                        />
+                    ) 
+                    }
+                      </div>
                   </div>
                 ))}
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
     </div>
   );
 };

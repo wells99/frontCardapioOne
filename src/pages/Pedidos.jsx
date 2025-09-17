@@ -5,6 +5,10 @@ import { DeleteFilled, EditFilled, PlusCircleOutlined } from "@ant-design/icons"
 import { useBuscarPedidos, useCriarPedido, useDeletarPedido, useEditarPedido } from "../hooks/pedidoHooks";
 import { useBuscarProdutos } from "../hooks/produtoHooks";
 import { useBuscarClientes } from "../hooks/clienteHooks";
+import { DollarCircleOutlined } from "@ant-design/icons";
+import PaymentsDrawer from "../components/PaymentsDrawer";
+
+
 
 const Pedidos = () => {
     const [visibleCreate, setVisibleCreate] = useState(false);
@@ -18,8 +22,9 @@ const Pedidos = () => {
     const { mutateAsync: deletar } = useDeletarPedido();
     const { mutateAsync: editar } = useEditarPedido();
 
-    // Removendo o useEffect, pois a lógica de atualização do preço
-    // será feita no onChange do Select.
+
+
+
 
     // COLUNAS DA TABELA
     const colunas = [
@@ -74,11 +79,14 @@ const Pedidos = () => {
         {
             title: "Opções",
             key: "x",
-            width: "9%",
+            width: "12%",
             align: "center",
             render: (_, record) => (
                 <div className="flex justify-between">
-                    <div className="w-[30px] h-[30px] flex justify-center items-center cursor-pointer duration-150 border border-transparent rounded-full hover:border-marrom group" onClick={() => openDrawerEdit(record)}>
+                    <div
+                        className="w-[30px] h-[30px] flex justify-center items-center cursor-pointer duration-150 border border-transparent rounded-full hover:border-marrom group"
+                        onClick={() => openDrawerEdit(record)}
+                    >
                         <EditFilled className=" duration-150 !text-bege group-hover:!text-marrom" />
                     </div>
                     <Popconfirm
@@ -91,9 +99,17 @@ const Pedidos = () => {
                             <DeleteFilled className=" duration-150 !text-bege group-hover:!text-marrom" />
                         </div>
                     </Popconfirm>
+
+                    {/* Aqui vamos adicionar o botão de pagamento */}
+                    <div
+                        className="w-[30px] h-[30px] flex justify-center items-center cursor-pointer duration-150 border border-transparent rounded-full hover:border-marrom group"
+                        onClick={() => openDrawerPayment(record.payment, record.id, record.total)}
+                    >
+                        <DollarCircleOutlined className="duration-150 !text-bege group-hover:!text-marrom" />
+                    </div>
                 </div>
-            ),
-        },
+            )
+        }
     ];
 
     // ABRIR CRIAR
@@ -202,6 +218,21 @@ const Pedidos = () => {
     // Mapeia os dados do cliente e produto para o formato esperado pelo Select do Ant Design
     const clientesOptions = clientes?.map(c => ({ label: c.name, value: c.id })) || [];
     const produtosOptions = produtos?.map(p => ({ label: p.name, value: p.id, price: p.price })) || [];
+
+    //Drawer de pagamento
+
+    const [drawerPaymentOpen, setDrawerPaymentOpen] = useState(false);
+    const [selectedPayment, setSelectedPayment] = useState(null);
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
+    const [selectedOrderTotal, setSelectedOrderTotal] = useState(0);
+
+    function openDrawerPayment(payment, orderId, total) {
+        setSelectedPayment(payment || null);
+        setSelectedOrderId(orderId);
+        setSelectedOrderTotal(total); // <- cria um estado extra: const [selectedOrderTotal, setSelectedOrderTotal] = useState(0)
+        setDrawerPaymentOpen(true);
+    }
+
 
     return (
         <>
@@ -359,6 +390,18 @@ const Pedidos = () => {
                     </Button>
                 </Form>
             </Drawer>
+            <PaymentsDrawer
+                open={drawerPaymentOpen}
+                onClose={() => {
+                    setDrawerPaymentOpen(false);
+                    setSelectedPayment(null);
+                    setSelectedOrderId(null);
+                    setSelectedOrderTotal(null);
+                }}
+                payment={selectedPayment}
+                orderId={selectedOrderId}
+                total={selectedOrderTotal}
+            />
         </>
     );
 };

@@ -61,6 +61,22 @@ const Header = () => {
                     <AppstoreOutlined />
                     Pedidos
                 </NavLink>
+                 <NavLink
+                    className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
+                    to={"/admin/ItemPedidos"}
+                    end
+                >
+                    <AppstoreOutlined />
+                    Detalhes de Pedido
+                </NavLink>
+                 <NavLink
+                    className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
+                    to={"/admin/pagamentos"}
+                    end
+                >
+                    <AppstoreOutlined />
+                    Pagamentos
+                </NavLink>
                 <div
                     className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
                     onClick={() => {
