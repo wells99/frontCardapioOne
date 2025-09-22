@@ -67,7 +67,7 @@ const Header = () => {
                     end
                 >
                     <AppstoreOutlined />
-                    Detalhes de Pedido
+                    Relatório Produtos
                 </NavLink>
                  <NavLink
                     className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}

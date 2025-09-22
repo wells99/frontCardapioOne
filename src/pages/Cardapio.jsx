@@ -16,7 +16,7 @@ const Cardapio = () => {
   const produtosParse = produtosSalvos ? JSON.parse(produtosSalvos) : null;
 
   const {
-    data: fetchedProducts,
+    data: products,
     isLoading,
     isError,
     error,
@@ -26,13 +26,13 @@ const Cardapio = () => {
     queryFn: fetchProducts,
   });
 
-  // if (!products) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen bg-gray-900">
-  //       <div className="text-xl font-semibold text-white">Carregando cardápio...</div>
-  //     </div>
-  //   );
-  // }
+  if (!products) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-900">
+        <div className="text-xl font-semibold text-white bg-black w-60 h-60 rounded-full transition scale-[150%]"><img src={logo} alt="logo" /></div>
+      </div>
+    );
+  }
 
   // Erro
   if (isError) {
@@ -73,8 +73,8 @@ const Cardapio = () => {
         <img src={logo} alt="logo" className='w-50' />
 
       </div>
-      <div className='bg-white h-40 w-full rounded-xl mt-[-20px] flex flex-col items-center justify-start 
-      md:items-start md:justify-center md:pl-20 lg:h-60'>
+      <div className='bg-white h-22 w-full rounded-xl mt-[-20px] flex flex-col items-center justify-center 
+      md:items-start md:pl-20 lg:h-60'>
         <div id='circlePhoto' className='bg-blue-500 rounded-full w-20 h-20 mt-[-40px] hidden lg:block'></div>
         <h1 className='font-bold text-xl'>Zé mexicano</h1>
         <div className='flex flex-col items-center justify-center text-center md:items-start'>

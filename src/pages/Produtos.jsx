@@ -179,7 +179,7 @@ const Produtos = () => {
         });
       }, onError: (error) => {
         api.error({
-          description: error.response?.data?.message || 'Erro ao Criar categoria.',
+          description: error.response?.data?.message || 'Erro ao deletar produto.',
         })}
       })
   }

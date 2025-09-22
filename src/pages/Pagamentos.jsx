@@ -1,7 +1,9 @@
 import { useBuscarPagamentos, useDeletarPagamento, useCriarPagamento, useEditarPagamento } from "../hooks/usePagamentos";
 import { useState } from "react";
 import { Button, Table, Drawer, Form, InputNumber, Select, DatePicker, Popconfirm } from "antd";
-import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+
 
 export default function Pagamentos() {
   const { data: pagamentos, isLoading, refetch } = useBuscarPagamentos();
@@ -13,15 +15,7 @@ export default function Pagamentos() {
   const [editPagamento, setEditPagamento] = useState(null);
   const [form] = Form.useForm();
 
-  const handleDelete = (id) => {
-    Popconfirm.confirm({
-      title: "Tem certeza?",
-      content: "Essa ação não pode ser desfeita.",
-      okText: "Sim",
-      cancelText: "Cancelar",
-      onConfirm: () => deletarPagamento.mutate(id, { onSuccess: refetch }),
-    });
-  };
+ 
 
   const handleSubmit = (values) => {
     if (editPagamento) {
@@ -68,7 +62,7 @@ export default function Pagamentos() {
                 method: record.method,
                 amount: record.amount,
                 status: record.status,
-                paidAt: record.paidAt ? new Date(record.paidAt) : null,
+                paidAt: record.paidAt ? dayjs(record.paidAt) : null,
               });
               setDrawerOpen(true);
             }}
@@ -77,7 +71,7 @@ export default function Pagamentos() {
             title="Tem certeza?"
             okText="Sim"
             cancelText="Cancelar"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => deletarPagamento.mutate(record.id, { onSuccess: refetch })}
           >
             <Button icon={<DeleteOutlined />} type="link" danger />
           </Popconfirm>
@@ -102,7 +96,7 @@ export default function Pagamentos() {
     <div className="p-4">
       <div className="flex justify-between mb-4">
         <h2 className="text-xl font-bold">Pagamentos</h2>
-        
+
       </div>
 
       <Table rowKey="id" columns={columns} dataSource={pagamentos} loading={isLoading} pagination={{ pageSize: 8 }} />
