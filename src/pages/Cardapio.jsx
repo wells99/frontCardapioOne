@@ -9,6 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import logo from "../assets/zelogo.png";
+import { NavLink } from "react-router-dom";
 
 const FAVORITES_STORAGE_KEY = "favorites";
 
@@ -101,7 +102,7 @@ export default function MenuPage() {
   const favoriteProducts = products.filter((p) =>
     favorites.some((fav) => fav.id === p.id)
   );
-  console.log(products);
+ 
 
   return (
 
@@ -111,13 +112,14 @@ export default function MenuPage() {
         <div className="flex items-center justify-between gap-3 p-4 border-b" id="header">
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-full bg-black flex items-center justify-center text-white font-bold text-xl">
-              <a
-                href={`${window.location.origin}/admin`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+
+              <NavLink
+                className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
+                to={"/admin"}
+                end >
                 <img src={logo} alt="logo" />
-              </a>
+              </NavLink>
+
             </div>
             <div>
               <h1 className="font-bold text-lg">Zé Mexicano</h1>
@@ -196,7 +198,7 @@ export default function MenuPage() {
             >
               <a href={`#${cat}`}>{cat}</a>
             </Button>
-            
+
           ))}
         </div>
 
