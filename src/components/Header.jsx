@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router"
-import logo from "../assets/react.svg"
+import logo from "../assets/zelogo.png"
 import { AppstoreOutlined, LogoutOutlined, PieChartOutlined } from "@ant-design/icons"
 
 const Header = () => {
@@ -7,9 +7,9 @@ const Header = () => {
     const navigate = useNavigate();
 
     return (
-        <header className="w-[270px] h-screen overflow-auto bg-green-700 p-4 text-lg font-normal text-white">
-            <img src={logo} alt="Tiamate" className="m-auto" />
-            <nav className="grid gap-3 mt-8 *:leading-[40px] *:text-creme *:duration-150 *:rounded *:pl-4">
+        <header className="w-[250px]  h-screen overflow-auto bg-green-700 p-4 text-lg font-normal text-white">
+            <img src={logo} alt="Tiamate" className="m-auto w-30" />
+            <nav className="grid gap-3  *:leading-[40px] *:text-creme *:duration-150 *:rounded *:pl-4">
                 <NavLink
                     className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
                     to={"/admin"}
