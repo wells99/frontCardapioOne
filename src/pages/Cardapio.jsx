@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Card, Tag, Modal } from "antd";
+import { Button, Card, Tag, Modal, Image } from "antd";
 import {
   HeartOutlined,
   HeartFilled,
@@ -102,16 +102,16 @@ export default function MenuPage() {
   const favoriteProducts = products.filter((p) =>
     favorites.some((fav) => fav.id === p.id)
   );
- 
+
 
   return (
 
     <>
-      <div className="w-full max-w-md mx-auto bg-green-700 min-h-screen">
+      <div className="w-full min-w-md mx-auto bg-green-700 min-h-screen ">
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 p-4 border-b" id="header">
+        <div className="flex items-center justify-between gap-3 p-4 border-b lg:h-30 md:w-full md:px-20" id="header">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-black flex items-center justify-center text-white font-bold text-xl">
+            <div className="w-14 h-14 lg:w-24 lg:h-24 rounded-full bg-black flex items-center justify-center text-white font-bold text-xl">
 
               <NavLink
                 className={"flex gap-2 hover:bg-green-600 [&.active]:bg-green-500 [&.active]:font-medium cursor-pointer"}
@@ -121,8 +121,8 @@ export default function MenuPage() {
               </NavLink>
 
             </div>
-            <div>
-              <h1 className="font-bold text-lg">Zé Mexicano</h1>
+            <div className="lg:pl-4">
+              <h1 className="font-bold text-lg lg:text-4xl lg:pb-4">Zé Mexicano</h1>
               <a href="https://search.google.com/local/writereview?placeid=ChIJocF0HgBHxwcRKLcdW7G91aI">
                 <Tag color="gold">Avaliar ★</Tag>
               </a>
@@ -134,7 +134,7 @@ export default function MenuPage() {
             className="text-gray-600 hover:text-gray-900"
           >
             <div className="relative">
-              <ShoppingOutlined className="text-2xl" />
+              <ShoppingOutlined className="text-2xl lg:text-4xl lg:px-2" />
               {favoriteProducts.length > 0 && (
                 <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                   {favoriteProducts.length}
@@ -171,10 +171,14 @@ export default function MenuPage() {
                       </span>
                     </div>
                     {p.imageUrl && (
-                      <img
+
+                      <Image
                         src={p.imageUrl}
                         alt={p.name}
                         className="w-16 h-16 object-cover rounded-md"
+                        width={60}
+                        // height={60}
+                        style={{ objectFit: "cover", borderRadius: 8 }}
                       />
                     )}
                   </div>
@@ -189,11 +193,11 @@ export default function MenuPage() {
         </Modal>
 
         {/* Categorias */}
-        <div className="flex gap-2 overflow-x-auto p-3">
+        <div className="flex gap-2 overflow-x-auto p-3 md:grid grid-cols-2 md:w-full md:px-20">
           {categories.map((cat, idx) => (
             <Button
               key={idx}
-              size="small"
+              size="middle"
               className="rounded-full border border-gray-400 whitespace-nowrap"
             >
               <a href={`#${cat}`}>{cat}</a>
@@ -203,14 +207,14 @@ export default function MenuPage() {
         </div>
 
         {/* Lista de produtos */}
-        <div className="p-3">
+        <div className="p-3 md:w-full md:px-20">
           {categories.map((cat) => (
             <div key={cat} id={cat} className="mb-6">
               <h2 className="font-bold text-lg mb-2">{cat.toUpperCase()}</h2>
               {products
                 .filter((p) => (p.category?.name || "Sem categoria") === cat)
                 .map((p) => (
-                  <div className="mb-1">
+                  <div className="mb-1 md:mb-4">
                     <Card
                       key={p.id}
                       className="mb-3 shadow-sm rounded-xl "
@@ -241,10 +245,17 @@ export default function MenuPage() {
                         </div>
                         {/* Imagem */}
                         {p.imageUrl && (
-                          <img
+                          <Image
                             src={p.imageUrl}
                             alt={p.name}
-                            className="w-20 h-20 object-cover rounded-md"
+                            preview={true} // habilita o preview padrão do antd
+                            width={80} // equivalente ao w-20 do Tailwind
+                            height={80} // equivalente ao h-20
+                            style={{
+                              objectFit: "cover",
+                              borderRadius: "0.375rem", // rounded-md ≈ 6px
+                            }}
+                            className="object-cover" // mantém consistência com Tailwind
                           />
                         )}
                       </div>
